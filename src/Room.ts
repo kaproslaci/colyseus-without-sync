@@ -170,7 +170,16 @@ export abstract class Room<T=any> extends EventEmitter {
 
     // broadcast patches (diff state) to all clients,
     // even if nothing has changed in order to calculate PING on client-side
-    return this.broadcast( msgpack.encode([ Protocol.ROOM_STATE_PATCH, this.roomId, patches ]) );
+    console.log('sending current state');
+    return this.broadcast(msgpack.encode( [
+      Protocol.ROOM_STATE,
+      this.roomId,
+      currentState,
+      this.clock.currentTime,
+      this.clock.elapsedTime,
+    ] ) )
+
+    //return this.broadcast( msgpack.encode([ Protocol.ROOM_STATE_PATCH, this.roomId, patches ]) );
   }
 
   private _onJoin (client: Client, options?: any): void {
